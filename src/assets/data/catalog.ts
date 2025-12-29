@@ -162,29 +162,315 @@ export const dsaAlgorithms: CatalogItem[] = normalizeItems(
 
 export const designPatterns: CatalogItem[] = normalizeItems(
   [
-    { name: 'Singleton', intent: 'Ensure a class has a single instance and a global access point.' },
-    { name: 'Factory Method', intent: 'Create objects via subclass-chosen factories to decouple construction.' },
-    { name: 'Abstract Factory', intent: 'Provide families of related objects without specifying concrete classes.' },
-    { name: 'Builder', intent: 'Construct complex objects step by step while controlling representation.' },
-    { name: 'Prototype', intent: 'Clone existing objects instead of instantiating new ones.' },
-    { name: 'Adapter', intent: 'Convert one interface into another that clients expect.' },
-    { name: 'Bridge', intent: 'Decouple abstraction from implementation so both can vary independently.' },
-    { name: 'Composite', intent: 'Treat part-whole object hierarchies uniformly.' },
-    { name: 'Decorator', intent: 'Attach responsibilities dynamically without altering the original class.' },
-    { name: 'Facade', intent: 'Provide a simplified interface to a subsystem.' },
-    { name: 'Flyweight', intent: 'Share state efficiently between many fine-grained objects.' },
-    { name: 'Proxy', intent: 'Provide a surrogate to control access to another object.' },
-    { name: 'Chain of Responsibility', intent: 'Pass requests through a chain until one handles it.' },
-    { name: 'Command', intent: 'Encapsulate a request as an object for parameterization and logging.' },
-    { name: 'Interpreter', intent: 'Define a language grammar and interpret sentences.' },
-    { name: 'Iterator', intent: 'Access elements of an aggregate sequentially without exposing representation.' },
-    { name: 'Mediator', intent: 'Centralize complex communication and control between objects.' },
-    { name: 'Memento', intent: 'Capture and restore an object’s internal state without violating encapsulation.' },
-    { name: 'Observer', intent: 'Define a one-to-many dependency for automatic updates.' },
-    { name: 'State', intent: 'Let an object alter behavior when its internal state changes.' },
-    { name: 'Strategy', intent: 'Define a family of algorithms and make them interchangeable.' },
-    { name: 'Template Method', intent: 'Define skeleton of an algorithm with overridable steps.' },
-    { name: 'Visitor', intent: 'Represent operations to be performed on elements of an object structure.' }
+    {
+      name: 'Singleton',
+      intent: 'Ensure a class has a single instance and a global access point.',
+      idea: 'Guard construction so callers always receive the same shared instance.',
+      visualization: {
+        title: 'Single entry point',
+        summary: 'All callers funnel through one lazy-created instance.',
+        type: 'timeline',
+        stages: ['Check for existing instance', 'Create once if missing', 'Return the shared reference']
+      }
+    },
+    {
+      name: 'Factory Method',
+      intent: 'Create objects via subclass-chosen factories to decouple construction.',
+      idea: 'Defer which concrete product is built to specialized creators.',
+      visualization: {
+        title: 'Creator delegates choice',
+        summary: 'Subclass factories decide which product to return.',
+        type: 'flow',
+        stages: [
+          { title: 'Request product', detail: 'Client calls the creator API' },
+          { title: 'Subclass picks', detail: 'Concrete creator chooses product type' },
+          { title: 'Deliver instance', detail: 'Creator returns a product that matches the request' }
+        ]
+      }
+    },
+    {
+      name: 'Abstract Factory',
+      intent: 'Provide families of related objects without specifying concrete classes.',
+      idea: 'Expose a kit of products that stay consistent inside each family.',
+      visualization: {
+        title: 'Consistent families',
+        summary: 'Client picks a family; the factory supplies matching parts.',
+        type: 'flow',
+        stages: [
+          { title: 'Select family', detail: 'Choose theme such as “dark” or “light” widgets' },
+          { title: 'Create products', detail: 'Factory spawns coordinated pieces from the family' },
+          { title: 'Assemble suite', detail: 'Client composes the compatible objects together' }
+        ]
+      }
+    },
+    {
+      name: 'Builder',
+      intent: 'Construct complex objects step by step while controlling representation.',
+      idea: 'Separate construction steps from final assembly for varied outputs.',
+      visualization: {
+        title: 'Incremental build',
+        summary: 'Director drives ordered steps before returning the product.',
+        type: 'timeline',
+        stages: ['Configure builder', 'Apply step-by-step adds', 'Assemble and return the product']
+      }
+    },
+    {
+      name: 'Prototype',
+      intent: 'Clone existing objects instead of instantiating new ones.',
+      idea: 'Copy a primed prototype and adjust to avoid costly setup.',
+      visualization: {
+        title: 'Clone then customize',
+        summary: 'Duplication preserves structure while tweaks personalize it.',
+        type: 'timeline',
+        stages: ['Choose prototype', 'Clone the base object', 'Apply targeted customizations']
+      }
+    },
+    {
+      name: 'Adapter',
+      intent: 'Convert one interface into another that clients expect.',
+      idea: 'Wrap an incompatible API to translate calls on the fly.',
+      visualization: {
+        title: 'Translator wrapper',
+        summary: 'Adapter rephrases the client call for the adaptee.',
+        type: 'flow',
+        stages: [
+          { title: 'Client calls target', detail: 'Requests use the expected interface' },
+          { title: 'Adapter maps', detail: 'Convert parameters and method names' },
+          { title: 'Adaptee responds', detail: 'Real work happens behind the adapter' }
+        ]
+      }
+    },
+    {
+      name: 'Bridge',
+      intent: 'Decouple abstraction from implementation so both can vary independently.',
+      idea: 'Split the high-level API from low-level implementations and bind them at runtime.',
+      visualization: {
+        title: 'Two-layer handshake',
+        summary: 'Abstractions forward work to interchangeable implementors.',
+        type: 'flow',
+        stages: [
+          { title: 'Define abstraction', detail: 'High-level control owns an implementor handle' },
+          { title: 'Plug implementor', detail: 'Bind a specific platform/driver at runtime' },
+          { title: 'Delegate calls', detail: 'Abstraction forwards operations to the implementor' }
+        ]
+      }
+    },
+    {
+      name: 'Composite',
+      intent: 'Treat part-whole object hierarchies uniformly.',
+      idea: 'Leaf and container nodes share the same interface so clients recurse naturally.',
+      visualization: {
+        title: 'Tree of components',
+        summary: 'Uniform operations walk a nested hierarchy.',
+        type: 'graph',
+        nodes: [
+          { id: 'Root', layer: 0 },
+          { id: 'Branch A', layer: 1 },
+          { id: 'Branch B', layer: 1 },
+          { id: 'Leaf 1', layer: 2 },
+          { id: 'Leaf 2', layer: 2 },
+          { id: 'Leaf 3', layer: 2 }
+        ],
+        order: ['Root', 'Branch A', 'Leaf 1', 'Leaf 2', 'Branch B', 'Leaf 3']
+      }
+    },
+    {
+      name: 'Decorator',
+      intent: 'Attach responsibilities dynamically without altering the original class.',
+      idea: 'Wrap components in layers to add behaviors before or after delegating.',
+      visualization: {
+        title: 'Layered wrappers',
+        summary: 'Each decorator adds flavor then forwards to the next.',
+        type: 'timeline',
+        stages: ['Wrap the core component', 'Add behavior in the decorator', 'Forward call to inner component']
+      }
+    },
+    {
+      name: 'Facade',
+      intent: 'Provide a simplified interface to a subsystem.',
+      idea: 'Offer a gentle entry point that hides coordination across complex parts.',
+      visualization: {
+        title: 'One friendly door',
+        summary: 'Facade orchestrates multiple subsystems for the caller.',
+        type: 'flow',
+        stages: [
+          { title: 'Client calls facade', detail: 'Single API surface' },
+          { title: 'Facade orchestrates', detail: 'Invoke underlying subsystem pieces' },
+          { title: 'Return simplified result', detail: 'Caller never sees the internal complexity' }
+        ]
+      }
+    },
+    {
+      name: 'Flyweight',
+      intent: 'Share state efficiently between many fine-grained objects.',
+      idea: 'Externalize unique data while pooling heavy intrinsic state.',
+      visualization: {
+        title: 'Shared core, unique tips',
+        summary: 'Pool the heavy parts; pass in light extrinsic data.',
+        type: 'timeline',
+        stages: ['Request flyweight from pool', 'Reuse intrinsic shared state', 'Apply caller-provided extrinsic state']
+      }
+    },
+    {
+      name: 'Proxy',
+      intent: 'Provide a surrogate to control access to another object.',
+      idea: 'Interpose a stand-in to lazily load, secure, or cache the real subject.',
+      visualization: {
+        title: 'Controlled gateway',
+        summary: 'Proxy vets requests before reaching the subject.',
+        type: 'flow',
+        stages: [
+          { title: 'Client talks to proxy', detail: 'Proxy looks identical to the subject' },
+          { title: 'Apply policy', detail: 'Authorize, cache, or defer creation' },
+          { title: 'Forward to subject', detail: 'Real work executes behind the proxy' }
+        ]
+      }
+    },
+    {
+      name: 'Chain of Responsibility',
+      intent: 'Pass requests through a chain until one handles it.',
+      idea: 'Link handlers so each can either process or forward the request.',
+      visualization: {
+        title: 'Linked handlers',
+        summary: 'Request walks the chain until accepted.',
+        type: 'flow',
+        stages: [
+          { title: 'Receive request', detail: 'Handler inspects the message' },
+          { title: 'Handle or pass', detail: 'Process locally or forward to next link' },
+          { title: 'Stop when handled', detail: 'Chain ends after a handler claims it' }
+        ]
+      }
+    },
+    {
+      name: 'Command',
+      intent: 'Encapsulate a request as an object for parameterization and logging.',
+      idea: 'Package an action and its receiver into an invokable message.',
+      visualization: {
+        title: 'Action objects',
+        summary: 'Commands queue, execute, and undo actions.',
+        type: 'timeline',
+        stages: ['Create command with receiver', 'Queue or log the request', 'Execute and optionally undo']
+      }
+    },
+    {
+      name: 'Interpreter',
+      intent: 'Define a language grammar and interpret sentences.',
+      idea: 'Model grammar rules as classes that evaluate an expression tree.',
+      visualization: {
+        title: 'Grammar walkthrough',
+        summary: 'Tokens build an AST that is evaluated node by node.',
+        type: 'timeline',
+        stages: ['Tokenize input', 'Build parse tree', 'Evaluate expression nodes']
+      }
+    },
+    {
+      name: 'Iterator',
+      intent: 'Access elements of an aggregate sequentially without exposing representation.',
+      idea: 'Maintain traversal state externally so collections stay simple.',
+      visualization: {
+        title: 'Cursor over a collection',
+        summary: 'Iterator steps through elements and signals completion.',
+        type: 'flow',
+        stages: [
+          { title: 'Create iterator', detail: 'Initialize position before the first element' },
+          { title: 'Advance cursor', detail: 'Move to next item and return it' },
+          { title: 'Detect completion', detail: 'Stop when no elements remain' }
+        ]
+      }
+    },
+    {
+      name: 'Mediator',
+      intent: 'Centralize complex communication and control between objects.',
+      idea: 'Colleagues talk only to the mediator, which coordinates reactions.',
+      visualization: {
+        title: 'Hub-and-spoke',
+        summary: 'Mediator receives signals and routes updates.',
+        type: 'flow',
+        stages: [
+          { title: 'Colleague notifies', detail: 'Send event to the mediator' },
+          { title: 'Mediator decides', detail: 'Applies rules to determine responses' },
+          { title: 'Broadcast updates', detail: 'Mediator calls other colleagues' }
+        ]
+      }
+    },
+    {
+      name: 'Memento',
+      intent: 'Capture and restore an object’s internal state without violating encapsulation.',
+      idea: 'Snapshot current state into a token that can be stored externally.',
+      visualization: {
+        title: 'Save and rewind',
+        summary: 'Originator issues snapshots and restores from them.',
+        type: 'timeline',
+        stages: ['Capture snapshot from originator', 'Mutate state safely', 'Restore from chosen memento']
+      }
+    },
+    {
+      name: 'Observer',
+      intent: 'Define a one-to-many dependency for automatic updates.',
+      idea: 'Subjects notify subscribed observers when something changes.',
+      visualization: {
+        title: 'Push updates',
+        summary: 'Subjects broadcast changes to all observers.',
+        type: 'flow',
+        stages: [
+          { title: 'Subject changes', detail: 'State mutates or event fires' },
+          { title: 'Notify observers', detail: 'Loop through subscribers' },
+          { title: 'Observers react', detail: 'Each listener updates itself' }
+        ]
+      }
+    },
+    {
+      name: 'State',
+      intent: 'Let an object alter behavior when its internal state changes.',
+      idea: 'Swap the active state object to change behavior without conditionals.',
+      visualization: {
+        title: 'Context swaps brains',
+        summary: 'Behavior routes to the active state object.',
+        type: 'timeline',
+        stages: ['Context holds a current state', 'Delegate behavior to that state', 'Transition swaps in a new state']
+      }
+    },
+    {
+      name: 'Strategy',
+      intent: 'Define a family of algorithms and make them interchangeable.',
+      idea: 'Inject different strategies to change the implementation behind the same API.',
+      visualization: {
+        title: 'Plug-in behaviors',
+        summary: 'Context chooses which strategy to execute.',
+        type: 'flow',
+        stages: [
+          { title: 'Select strategy', detail: 'Pick algorithm based on situation' },
+          { title: 'Execute via context', detail: 'Context calls through the shared interface' },
+          { title: 'Swap as needed', detail: 'Switch strategies without changing callers' }
+        ]
+      }
+    },
+    {
+      name: 'Template Method',
+      intent: 'Define skeleton of an algorithm with overridable steps.',
+      idea: 'Base class outlines the steps; subclasses override hooks.',
+      visualization: {
+        title: 'Algorithm skeleton',
+        summary: 'Fixed steps interleave with extension points.',
+        type: 'timeline',
+        stages: ['Run fixed pre-steps', 'Call hook for customization', 'Finish with fixed closing steps']
+      }
+    },
+    {
+      name: 'Visitor',
+      intent: 'Represent operations to be performed on elements of an object structure.',
+      idea: 'Visitors traverse elements and execute type-specific logic via double dispatch.',
+      visualization: {
+        title: 'Double dispatch tour',
+        summary: 'Visitor walks the structure and calls back per concrete element.',
+        type: 'flow',
+        stages: [
+          { title: 'Accept visitor', detail: 'Element hands control to visitor' },
+          { title: 'Dispatch per type', detail: 'Visitor executes the matching overload' },
+          { title: 'Accumulate result', detail: 'Visitor collects or applies side effects' }
+        ]
+      }
+    }
   ],
   'Gang of Four'
 );

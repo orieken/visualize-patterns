@@ -1,20 +1,33 @@
 <template>
   <section class="checklist">
     <div class="checklist-header">
-      <div>
-        <p class="eyebrow">Visualization checklist</p>
-        <h3>Track coverage across domains</h3>
-        <p class="meta">Every item gets a dedicated route; checked rows already have a mini-visual in place.</p>
+      <div class="heading">
+        <p v-if="title" class="eyebrow">{{ title }}</p>
+        <h3>Visualization coverage</h3>
       </div>
-      <div class="pill">
-        <span class="pill-dot"></span>
-        {{ completed }} / {{ items.length }} completed
+      <div class="controls">
+        <div class="filters">
+          <button
+            v-for="filter in filters"
+            :key="filter.value"
+            type="button"
+            class="filter-button"
+            :class="{ active: filter.value === activeFilter }"
+            @click="activeFilter = filter.value"
+          >
+            {{ filter.label }}
+          </button>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          {{ completed }} / {{ filteredItems.length }} completed
+        </div>
       </div>
     </div>
 
     <div class="checklist-grid">
       <RouterLink
-        v-for="item in orderedItems"
+        v-for="item in filteredItems"
         :key="item.slug"
         class="checklist-row"
         :class="{ done: Boolean(item.visualization) }"
@@ -34,10 +47,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { CatalogItem } from '../types/catalog';
+import { computed, ref } from 'vue';
+import type { CatalogItem, Domain } from '../types/catalog';
 
-const props = withDefaults(defineProps<{ items: CatalogItem[] }>(), { items: () => [] });
+type FilterValue = 'all' | Domain;
+
+const props = withDefaults(defineProps<{ items: CatalogItem[]; title?: string }>(), { items: () => [] });
+
+const domains = computed<Domain[]>(() => Array.from(new Set(props.items.map(item => item.domain))));
+const filters = computed<{ value: FilterValue; label: string }[]>(() => [
+  { value: 'all' as const, label: 'All' },
+  ...domains.value.map(domain => ({ value: domain, label: domain }))
+]);
+
+const activeFilter = ref<FilterValue>('all');
 
 const orderedItems = computed<CatalogItem[]>(() =>
   [...props.items].sort((a, b) => {
@@ -46,5 +69,11 @@ const orderedItems = computed<CatalogItem[]>(() =>
   })
 );
 
-const completed = computed<number>(() => orderedItems.value.filter(item => Boolean(item.visualization)).length);
+const filteredItems = computed<CatalogItem[]>(() =>
+  activeFilter.value === 'all'
+    ? orderedItems.value
+    : orderedItems.value.filter(item => item.domain === activeFilter.value)
+);
+
+const completed = computed<number>(() => filteredItems.value.filter(item => Boolean(item.visualization)).length);
 </script>

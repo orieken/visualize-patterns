@@ -27,8 +27,8 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import VisualizationCanvas from '../components/VisualizationCanvas.vue';
-import { allItems } from '../assets/data/catalog';
 import type { CatalogItem } from '../types/catalog';
+import { allItems } from '../assets/data/catalog';
 
 const route = useRoute();
 

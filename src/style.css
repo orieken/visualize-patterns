@@ -52,6 +52,7 @@ a:hover {
   border: 1px solid #e2e8f0;
 }
 
+<<<<<<< HEAD
 .card-link {
   display: block;
   color: inherit;
@@ -68,6 +69,8 @@ a:hover {
   gap: 0.5rem;
 }
 
+=======
+>>>>>>> main
 .badge {
   display: inline-flex;
   padding: 0.25rem 0.55rem;
@@ -120,6 +123,7 @@ a:hover {
   border-radius: 12px;
   color: white;
 }
+<<<<<<< HEAD
 
 .checklist {
   margin-top: 2rem;
@@ -260,3 +264,5 @@ a:hover {
     align-items: flex-start;
   }
 }
+=======
+>>>>>>> main

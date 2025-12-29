@@ -3,8 +3,8 @@
     <div class="checklist-header">
       <div>
         <p class="eyebrow">Visualization checklist</p>
-        <h3>Track coverage across domains</h3>
-        <p class="meta">Every item gets a dedicated route; checked rows already have a mini-visual in place.</p>
+        <h3>{{ title }}</h3>
+        <p class="meta">{{ description }}</p>
       </div>
       <div class="pill">
         <span class="pill-dot"></span>
@@ -37,7 +37,14 @@
 import { computed } from 'vue';
 import type { CatalogItem } from '../types/catalog';
 
-const props = withDefaults(defineProps<{ items: CatalogItem[] }>(), { items: () => [] });
+const props = withDefaults(
+  defineProps<{ items: CatalogItem[]; title?: string; description?: string }>(),
+  {
+    items: () => [],
+    title: 'Track coverage across domains',
+    description: 'Every item gets a dedicated route; checked rows already have a mini-visual in place.'
+  }
+);
 
 const orderedItems = computed<CatalogItem[]>(() =>
   [...props.items].sort((a, b) => {

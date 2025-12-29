@@ -23,16 +23,19 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VisualizationCanvas from './VisualizationCanvas.vue';
+import type { CatalogItem } from '../types/catalog';
 
-defineProps({
-  title: String,
-  subtitle: String,
-  description: String,
-  items: {
-    type: Array,
-    default: () => []
+withDefaults(
+  defineProps<{
+    title: string;
+    subtitle: string;
+    description: string;
+    items: CatalogItem[];
+  }>(),
+  {
+    items: () => []
   }
-});
+);
 </script>

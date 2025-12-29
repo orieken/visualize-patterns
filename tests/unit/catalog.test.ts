@@ -7,8 +7,9 @@ import {
   pendingVisualizations,
   visualizedItems
 } from '../../src/assets/data/catalog';
+import type { CatalogItem } from '../../src/types/catalog';
 
-const hasIdea = item => Boolean(item.idea || item.intent);
+const hasIdea = (item: CatalogItem): boolean => Boolean(item.idea || item.intent);
 
 describe('catalog datasets', () => {
   it('lists at least ten DS&A entries with complexity annotations', () => {

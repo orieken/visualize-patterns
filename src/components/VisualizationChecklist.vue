@@ -33,22 +33,18 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
+import type { CatalogItem } from '../types/catalog';
 
-const props = defineProps({
-  items: {
-    type: Array,
-    default: () => []
-  }
-});
+const props = withDefaults(defineProps<{ items: CatalogItem[] }>(), { items: () => [] });
 
-const orderedItems = computed(() =>
+const orderedItems = computed<CatalogItem[]>(() =>
   [...props.items].sort((a, b) => {
     if (a.domain === b.domain) return a.name.localeCompare(b.name);
     return a.domain.localeCompare(b.domain);
   })
 );
 
-const completed = computed(() => orderedItems.value.filter(item => Boolean(item.visualization)).length);
+const completed = computed<number>(() => orderedItems.value.filter(item => Boolean(item.visualization)).length);
 </script>

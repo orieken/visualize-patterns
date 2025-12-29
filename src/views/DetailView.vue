@@ -23,13 +23,21 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import VisualizationCanvas from '../components/VisualizationCanvas.vue';
 import { allItems } from '../assets/data/catalog';
+import type { CatalogItem } from '../types/catalog';
 
 const route = useRoute();
 
-const item = computed(() => allItems.find(entry => entry.slug === route.params.slug));
+const slugParam = computed(() => {
+  const param = route.params.slug;
+  return typeof param === 'string' ? param : Array.isArray(param) ? param[0] : undefined;
+});
+
+const item = computed<CatalogItem | undefined>(() =>
+  allItems.find(entry => entry.slug === slugParam.value)
+);
 </script>

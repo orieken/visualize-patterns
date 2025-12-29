@@ -35,7 +35,7 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SectionGrid from '../components/SectionGrid.vue';
 import VisualizationChecklist from '../components/VisualizationChecklist.vue';
 import { allItems, dsaAlgorithms, designPatterns, mlAlgorithms } from '../assets/data/catalog';

@@ -68,19 +68,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
+import type { CatalogItem, GraphNode, ScatterPoint, Visualization } from '../types/catalog';
 
-const props = defineProps({
-  visualization: {
-    type: Object,
-    default: null
-  }
-});
+const props = defineProps<{ visualization?: Visualization }>();
 
-const layeredNodes = computed(() => {
+const layeredNodes = computed<GraphNode[][]>(() => {
   if (!props.visualization || props.visualization.type !== 'graph') return [];
-  const layers = new Map();
+  const layers = new Map<number, GraphNode[]>();
   props.visualization.nodes.forEach(node => {
     const list = layers.get(node.layer) || [];
     list.push(node);
@@ -91,14 +87,18 @@ const layeredNodes = computed(() => {
     .map(([, nodes]) => nodes);
 });
 
-const highlightSet = computed(() => new Set(props.visualization?.order || []));
-const scatterCategories = computed(() => {
+const highlightSet = computed(() =>
+  new Set(props.visualization && props.visualization.type === 'graph' ? props.visualization.order : [])
+);
+
+const scatterCategories = computed<string[]>(() => {
   if (!props.visualization || props.visualization.type !== 'scatter') return [];
-  const categories = new Set(props.visualization.points.map(point => point.category));
+  const categories = new Set(props.visualization.points.map((point: ScatterPoint) => point.category));
   return Array.from(categories.values());
 });
 
-const normalizedCategory = category => category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const normalizedCategory = (category: CatalogItem['domain'] | string): string =>
+  category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 </script>
 
 <style scoped>

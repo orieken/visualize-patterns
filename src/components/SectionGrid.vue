@@ -7,25 +7,35 @@
     <p class="meta">{{ description }}</p>
     <div class="grid">
       <article v-for="item in items" :key="item.name" class="card">
-        <header style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
-          <strong>{{ item.name }}</strong>
-          <span v-if="item.category || item.type" class="badge">{{ item.category || item.type }}</span>
-        </header>
-        <p v-if="item.complexity" class="meta">Complexity: {{ item.complexity }}</p>
-        <p class="description">{{ item.idea || item.intent }}</p>
+        <RouterLink class="card-link" :to="{ name: 'visualization', params: { slug: item.slug } }">
+          <header class="card-header">
+            <div>
+              <strong>{{ item.name }}</strong>
+              <p v-if="item.complexity" class="meta">Complexity: {{ item.complexity }}</p>
+            </div>
+            <span v-if="item.category || item.type" class="badge">{{ item.category || item.type }}</span>
+          </header>
+          <p class="description">{{ item.idea || item.intent }}</p>
+          <VisualizationCanvas v-if="item.visualization" :visualization="item.visualization" />
+        </RouterLink>
       </article>
     </div>
   </section>
 </template>
 
-<script setup>
-defineProps({
-  title: String,
-  subtitle: String,
-  description: String,
-  items: {
-    type: Array,
-    default: () => []
+<script setup lang="ts">
+import VisualizationCanvas from './VisualizationCanvas.vue';
+import type { CatalogItem } from '../types/catalog';
+
+withDefaults(
+  defineProps<{
+    title: string;
+    subtitle: string;
+    description: string;
+    items: CatalogItem[];
+  }>(),
+  {
+    items: () => []
   }
-});
+);
 </script>

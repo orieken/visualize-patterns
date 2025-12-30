@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "test:bdd": "cucumber-js --require-module $(pwd)/tests/bdd/ts-node.cjs --require tests/bdd/steps/**/*.ts tests/bdd/features/**/*.feature",
+    "test:bdd": "cucumber-js --require-module $(pwd)/tests/bdd/ts-node.cjs --require tests/bdd/steps/**/*.ts --require src/academy/**/*.steps.ts tests/bdd/features/**/*.feature src/academy/**/*.feature",
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {

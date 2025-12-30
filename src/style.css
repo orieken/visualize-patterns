@@ -296,3 +296,22 @@ a:hover {
     justify-content: space-between;
   }
 }
+
+.explanation {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.explanation h3 {
+  margin-top: 0;
+  color: #1e3a8a;
+  font-size: 1.1rem;
+}
+
+.explanation-text {
+  color: #334155;
+  white-space: pre-line;
+}

@@ -1,4 +1,4 @@
-import { Given, When, Then } from 'cucumber';
+import { Given, When, Then } from '@cucumber/cucumber';
 import assert from 'node:assert/strict';
 import type { CatalogItem } from '../../../src/types/catalog';
 

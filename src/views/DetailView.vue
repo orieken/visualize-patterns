@@ -10,6 +10,11 @@
       <p class="meta" v-else>Category: {{ item.category || 'Pattern' }}</p>
       <p class="description">{{ item.idea || item.intent }}</p>
 
+      <div v-if="item.explanation" class="explanation">
+        <h3>Plain English Explanation</h3>
+        <p class="explanation-text">{{ item.explanation }}</p>
+      </div>
+
       <VisualizationCanvas v-if="item.visualization" :visualization="item.visualization" />
       <div v-else class="pending">
         <p>Visualization pending — marked on the checklist for implementation.</p>

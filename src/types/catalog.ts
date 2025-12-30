@@ -56,12 +56,20 @@ export interface FlowVisualization {
   stages: FlowStage[];
 }
 
+export interface InteractiveVisualization {
+  type: 'interactive';
+  component: string;
+  title: string;
+  summary: string;
+}
+
 export type Visualization =
   | GraphVisualization
   | BarsVisualization
   | TimelineVisualization
   | ScatterVisualization
-  | FlowVisualization;
+  | FlowVisualization
+  | InteractiveVisualization;
 
 export interface CatalogItem {
   name: string;
@@ -72,5 +80,6 @@ export interface CatalogItem {
   type?: string;
   idea?: string;
   intent?: string;
+  explanation?: string;
   visualization?: Visualization;
 }

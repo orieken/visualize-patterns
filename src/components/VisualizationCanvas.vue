@@ -65,12 +65,48 @@
         <div v-if="index < visualization.stages.length - 1" class="flow-arrow">→</div>
       </div>
     </div>
+    <div v-else-if="visualization.type === 'interactive'" class="interactive">
+      <component :is="interactiveComponent" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { CatalogItem, GraphNode, ScatterPoint, Visualization } from '../types/catalog';
+import SingletonInteractive from './interactive/SingletonInteractive.vue';
+import BfsInteractive from './interactive/BfsInteractive.vue';
+import DfsInteractive from './interactive/DfsInteractive.vue';
+import DijkstraInteractive from './interactive/DijkstraInteractive.vue';
+import AStarInteractive from './interactive/AStarInteractive.vue';
+import MergeSortInteractive from './interactive/MergeSortInteractive.vue';
+import QuickSortInteractive from './interactive/QuickSortInteractive.vue';
+import UnionFindInteractive from './interactive/UnionFindInteractive.vue';
+import TopologicalSortInteractive from './interactive/TopologicalSortInteractive.vue';
+import KMPInteractive from './interactive/KMPInteractive.vue';
+import FibonacciInteractive from './interactive/FibonacciInteractive.vue';
+import FactoryMethodInteractive from './interactive/FactoryMethodInteractive.vue';
+import AbstractFactoryInteractive from './interactive/AbstractFactoryInteractive.vue';
+import BuilderInteractive from './interactive/BuilderInteractive.vue';
+import PrototypeInteractive from './interactive/PrototypeInteractive.vue';
+import AdapterInteractive from './interactive/AdapterInteractive.vue';
+import BridgeInteractive from './interactive/BridgeInteractive.vue';
+import CompositeInteractive from './interactive/CompositeInteractive.vue';
+import DecoratorInteractive from './interactive/DecoratorInteractive.vue';
+import FacadeInteractive from './interactive/FacadeInteractive.vue';
+import FlyweightInteractive from './interactive/FlyweightInteractive.vue';
+import ProxyInteractive from './interactive/ProxyInteractive.vue';
+import ChainOfResponsibilityInteractive from './interactive/ChainOfResponsibilityInteractive.vue';
+import CommandInteractive from './interactive/CommandInteractive.vue';
+import InterpreterInteractive from './interactive/InterpreterInteractive.vue';
+import IteratorInteractive from './interactive/IteratorInteractive.vue';
+import MediatorInteractive from './interactive/MediatorInteractive.vue';
+import MementoInteractive from './interactive/MementoInteractive.vue';
+import ObserverInteractive from './interactive/ObserverInteractive.vue';
+import StateInteractive from './interactive/StateInteractive.vue';
+import StrategyInteractive from './interactive/StrategyInteractive.vue';
+import TemplateMethodInteractive from './interactive/TemplateMethodInteractive.vue';
+import VisitorInteractive from './interactive/VisitorInteractive.vue';
 
 const props = defineProps<{ visualization?: Visualization }>();
 
@@ -99,6 +135,46 @@ const scatterCategories = computed<string[]>(() => {
 
 const normalizedCategory = (category: CatalogItem['domain'] | string): string =>
   category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+const interactiveComponent = computed(() => {
+  if (props.visualization?.type !== 'interactive') return null;
+  switch (props.visualization.component) {
+    case 'SingletonInteractive': return SingletonInteractive;
+    case 'BfsInteractive': return BfsInteractive;
+    case 'DfsInteractive': return DfsInteractive;
+    case 'DijkstraInteractive': return DijkstraInteractive;
+    case 'AStarInteractive': return AStarInteractive;
+    case 'MergeSortInteractive': return MergeSortInteractive;
+    case 'QuickSortInteractive': return QuickSortInteractive;
+    case 'UnionFindInteractive': return UnionFindInteractive;
+    case 'TopologicalSortInteractive': return TopologicalSortInteractive;
+    case 'KMPInteractive': return KMPInteractive;
+    case 'FibonacciInteractive': return FibonacciInteractive;
+    case 'FactoryMethodInteractive': return FactoryMethodInteractive;
+    case 'AbstractFactoryInteractive': return AbstractFactoryInteractive;
+    case 'BuilderInteractive': return BuilderInteractive;
+    case 'PrototypeInteractive': return PrototypeInteractive;
+    case 'AdapterInteractive': return AdapterInteractive;
+    case 'BridgeInteractive': return BridgeInteractive;
+    case 'CompositeInteractive': return CompositeInteractive;
+    case 'DecoratorInteractive': return DecoratorInteractive;
+    case 'FacadeInteractive': return FacadeInteractive;
+    case 'FlyweightInteractive': return FlyweightInteractive;
+    case 'ProxyInteractive': return ProxyInteractive;
+    case 'ChainOfResponsibilityInteractive': return ChainOfResponsibilityInteractive;
+    case 'CommandInteractive': return CommandInteractive;
+    case 'InterpreterInteractive': return InterpreterInteractive;
+    case 'IteratorInteractive': return IteratorInteractive;
+    case 'MediatorInteractive': return MediatorInteractive;
+    case 'MementoInteractive': return MementoInteractive;
+    case 'ObserverInteractive': return ObserverInteractive;
+    case 'StateInteractive': return StateInteractive;
+    case 'StrategyInteractive': return StrategyInteractive;
+    case 'TemplateMethodInteractive': return TemplateMethodInteractive;
+    case 'VisitorInteractive': return VisitorInteractive;
+    default: return null;
+  }
+});
 </script>
 
 <style scoped>

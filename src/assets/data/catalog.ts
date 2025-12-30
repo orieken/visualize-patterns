@@ -456,127 +456,108 @@ export const mlAlgorithms: CatalogItem[] = normalizeItems(
       name: 'Linear Regression',
       type: 'Supervised',
       idea: 'Fit a line to minimize squared error.',
+      explanation: "Linear Regression tries to fit a straight line ($y = mx + b$) through a set of data points to model the relationship between two variables.\n\nIt calculates the line that minimizes the sum of squared vertical distances (residuals) between the observed data points and the fitted line.\n- **m** (Slope): How much $y$ changes for a unit change in $x$.\n- **b** (Intercept): Where the line crosses the y-axis when $x=0$.",
       visualization: {
-        title: 'Best-fit line',
-        summary: 'Line minimizes squared residuals across points.',
-        type: 'scatter',
-        points: [
-          { label: 'A', x: 15, y: 25, category: 'Supervised' },
-          { label: 'B', x: 35, y: 35, category: 'Supervised' },
-          { label: 'C', x: 55, y: 50, category: 'Supervised' },
-          { label: 'D', x: 75, y: 65, category: 'Supervised' }
-        ]
+         type: 'interactive',
+         component: 'LinearRegressionInteractive',
+         title: 'Least Squares Fitting',
+         summary: 'Click to add points and watch the line of best fit adjust instantly.'
       }
     },
     {
       name: 'Logistic Regression',
       type: 'Supervised',
       idea: 'Model probability with the logistic function.',
+      explanation: "Logistic Regression is used for binary classification (Pass/Fail, Spam/Not Spam). Unlike Linear Regression which fits a line, Logistic Regression fits an 'S-shaped' Sigmoid curve.\n\nThe output is a probability between 0 and 1.\n- **Sigmoid Function**: $\\sigma(z) = \\frac{1}{1 + e^{-z}}$\n- If output > 0.5, classify as True (1).\n- If output < 0.5, classify as False (0).",
       visualization: {
-        title: 'Sigmoid decision',
-        summary: 'Scores map to probabilities via the S-curve.',
-        type: 'timeline',
-        stages: ['Compute linear score w = x·θ', 'Push through sigmoid σ(z)', 'Threshold to classify']
+         type: 'interactive',
+         component: 'LogisticRegressionInteractive',
+         title: 'Pass/Fail Probability',
+         summary: 'Add Pass/Fail data points to curve the probability slope.'
       }
     },
     {
       name: 'k-Nearest Neighbors',
       type: 'Supervised',
       idea: 'Predict using the majority/average of nearest samples.',
+      explanation: "k-Nearest Neighbors (k-NN) assumes that similar things exist in close proximity. To classify a new data point, it looks at the 'k' closest training data points.\n\n- If **k=3**, it looks at the 3 nearest neighbors.\n- If 2 are Blue and 1 is Orange, the new point is classified as **Blue**.\n\nIt is a 'lazy' learner because it doesn't learn a model; it essentially memorizes the dataset.",
       visualization: {
-        title: 'Neighborhood voting',
-        summary: 'Points close in feature space cast the votes.',
-        type: 'scatter',
-        points: [
-          { label: 'Q', x: 50, y: 50, category: 'Supervised' },
-          { label: '1', x: 40, y: 55, category: 'Supervised' },
-          { label: '2', x: 55, y: 60, category: 'Supervised' },
-          { label: '3', x: 45, y: 40, category: 'Supervised' }
-        ]
+         type: 'interactive',
+         component: 'KNNInteractive',
+         title: 'Majority Voting',
+         summary: 'Move the cursor to classify new points based on their neighbors.'
       }
     },
     {
       name: 'Decision Trees',
       type: 'Supervised',
       idea: 'Split data by feature thresholds to reduce impurity.',
+      explanation: "A Decision Tree makes predictions by asking a series of questions. It splits the data into smaller and smaller subsets based on feature values.\n\nImagine a flowchart: \n1. **Is it raining?** \n   - Yes -> Take Umbrella.\n   - No -> **Is it sunny?**\n     - Yes -> Wear Sunglasses.\n     - No -> Just go outside.\n\nEach split aims to make the resulting groups as 'pure' as possible (e.g., all samples in a leaf node belong to the same class).",
       visualization: {
-        title: 'Recursive splits',
-        summary: 'Thresholds partition space into pure leaves.',
-        type: 'flow',
-        stages: [
-          { title: 'Choose feature', detail: 'Pick split with best gain' },
-          { title: 'Split dataset', detail: 'Route left/right on threshold' },
-          { title: 'Leaf prediction', detail: 'Majority vote or mean' }
-        ]
+         type: 'interactive',
+         component: 'DecisionTreeInteractive',
+         title: 'Activity Recommender',
+         summary: 'Follow the flowchart based on Mood and Weather to decide what to do.'
       }
     },
     {
       name: 'Random Forests',
       type: 'Ensemble',
       idea: 'Average many decision trees built on random subsets.',
+      explanation: "A Random Forest is an 'ensemble' method that constructs many Decision Trees during training. \n\nEach tree is trained on a random subset of the data and uses a random subset of features (Bootstrap Aggregation or 'Bagging').\n\nTo make a prediction, it asks every individual tree for its vote and takes the majority. It reduces overfitting compared to a single Decision Tree because the errors of individual trees cancel out.",
       visualization: {
-        title: 'Bagged trees',
-        summary: 'Sampled data + features create decorrelated trees.',
-        type: 'flow',
-        stages: [
-          { title: 'Bootstrap samples', detail: 'Draw rows with replacement' },
-          { title: 'Train many trees', detail: 'Limit features per split' },
-          { title: 'Aggregate', detail: 'Average/majority across trees' }
-        ]
+         type: 'interactive',
+         component: 'RandomForestsInteractive',
+         title: 'Democracy of Trees',
+         summary: 'Watch multiple trees vote on whether a fruit is an Apple or Banana.'
       }
     },
     {
       name: 'Gradient Boosting',
       type: 'Ensemble',
       idea: 'Sequentially add weak learners to correct residuals.',
+      explanation: "Gradient Boosting builds a strong model by combining many weak models sequentially.\n\nUnlike Random Forest (which builds independent trees in parallel), Gradient Boosting builds trees one at a time.\n\n1. Train a model.\n2. Calculate the errors (residuals).\n3. Train a NEW model to predict *just* the errors.\n4. Add this new model to the ensemble.\n\nIt's like a golfer putt: The first shot gets close. The second shot aims at the hole from where the first landed.",
       visualization: {
-        title: 'Residual chasing',
-        summary: 'Each learner fits what the previous missed.',
-        type: 'timeline',
-        stages: ['Fit first weak learner', 'Compute residuals', 'Fit next learner on residuals', 'Combine with learning rate']
+         type: 'interactive',
+         component: 'GradientBoostingInteractive',
+         title: 'Closing the Gap',
+         summary: 'Add new learners to progressively close the distance to the target.'
       }
     },
     {
       name: 'Support Vector Machines',
       type: 'Supervised',
       idea: 'Maximize margin between classes with kernels.',
+      explanation: "A Support Vector Machine (SVM) finds the best boundary (hyperplane) that separates two classes of data points.\n\nThe key goal is to maximize the **margin**—the distance between the boundary and the nearest separating points (called Support Vectors).\n\nA wider margin means the model is more robust and likely to generalize better to new data.",
       visualization: {
-        title: 'Maximum margin',
-        summary: 'Support vectors define the separating hyperplane.',
-        type: 'scatter',
-        points: [
-          { label: '+', x: 30, y: 70, category: 'Supervised' },
-          { label: '+', x: 70, y: 75, category: 'Supervised' },
-          { label: '-', x: 40, y: 35, category: 'Supervised' },
-          { label: '-', x: 75, y: 40, category: 'Supervised' }
-        ]
+         type: 'interactive',
+         component: 'SVMInteractive',
+         title: 'Max Margin Separator',
+         summary: 'Add points to see the boundary shift to maintain the widest gap.'
       }
     },
     {
       name: 'k-Means Clustering',
       type: 'Unsupervised',
       idea: 'Assign points to nearest centroids and iterate.',
+      explanation: "k-Means is an unsupervised algorithm that groups similar data points together into 'k' clusters.\n\nIt works iteratively:\n1. **Initialization**: Pick 'k' random points as centroids.\n2. **Assignment**: Assign every data point to the nearest centroid.\n3. **Update**: Move each centroid to the center (mean) of its assigned points.\n4. Repeat 2 & 3 until centroids stop moving.",
       visualization: {
-        title: 'Centroid updates',
-        summary: 'Assign, recompute centers, repeat.',
-        type: 'scatter',
-        points: [
-          { label: '1', x: 25, y: 35, category: 'Unsupervised' },
-          { label: '2', x: 30, y: 65, category: 'Unsupervised' },
-          { label: '3', x: 65, y: 45, category: 'Unsupervised' },
-          { label: 'C₁', x: 28, y: 50, category: 'Unsupervised' }
-        ]
+         type: 'interactive',
+         component: 'KMeansInteractive',
+         title: 'Cluster Iteration',
+         summary: 'Add points, init centroids, and step through the assignment/update loop.'
       }
     },
     {
       name: 'Principal Component Analysis',
-      type: 'Dimensionality reduction',
+      type: 'Unsupervised',
       idea: 'Rotate data to principal axes of variance.',
+      explanation: "Principal Component Analysis (PCA) is a technique for Dimensionality Reduction. It finds the directions (Principal Components) where the data varies the most.\n\nImagine a cloud of points shaped like a flat pancake. \n- **PC1** is the long axis of the pancake.\n- **PC2** is the short axis.\n\nBy ignoring the short axis (projecting everything onto PC1), we reduce dimensions while keeping most of the information.",
       visualization: {
-        title: 'Variance axes',
-        summary: 'Top components capture most spread.',
-        type: 'timeline',
-        stages: ['Center the data', 'Compute covariance matrix', 'Pick top eigenvectors as components']
+         type: 'interactive',
+         component: 'PCAInteractive',
+         title: 'Finding the Axis',
+         summary: 'Toggle between a 2D cloud and its 1D projection onto the Principal Component.'
       }
     },
     {
@@ -584,14 +565,10 @@ export const mlAlgorithms: CatalogItem[] = normalizeItems(
       type: 'Deep learning',
       idea: 'Stack layers of nonlinear units trained with backprop.',
       visualization: {
-        title: 'Layered processing',
-        summary: 'Inputs flow forward; gradients flow backward.',
-        type: 'flow',
-        stages: [
-          { title: 'Forward pass', detail: 'Multiply, sum, and activate' },
-          { title: 'Loss', detail: 'Compare prediction to target' },
-          { title: 'Backprop', detail: 'Chain-rule gradients update weights' }
-        ]
+         type: 'interactive',
+         component: 'NeuralNetworkInteractive',
+         title: 'Interactive XOR Network',
+         summary: 'Train a small MLP to solve the XOR problem.'
       }
     },
     {
@@ -599,10 +576,10 @@ export const mlAlgorithms: CatalogItem[] = normalizeItems(
       type: 'RL',
       idea: 'Learn action values via temporal-difference updates.',
       visualization: {
-        title: 'Value iteration',
-        summary: 'Bootstrapped Q estimates guide exploration.',
-        type: 'timeline',
-        stages: ['Observe state and choose action', 'Receive reward and next state', "Update Q(s, a) toward reward + γ maxₐ′ Q(s′, a′)"]
+        type: 'interactive',
+        component: 'RLInteractive',
+        title: 'Q-Learning Grid World',
+        summary: 'Train an agent to find the goal 🏆 while avoiding hazards 🔥.'
       }
     }
   ],

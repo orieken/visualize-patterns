@@ -107,6 +107,17 @@ import StateInteractive from './interactive/StateInteractive.vue';
 import StrategyInteractive from './interactive/StrategyInteractive.vue';
 import TemplateMethodInteractive from './interactive/TemplateMethodInteractive.vue';
 import VisitorInteractive from './interactive/VisitorInteractive.vue';
+import LinearRegressionInteractive from './interactive/LinearRegressionInteractive.vue';
+import LogisticRegressionInteractive from './interactive/LogisticRegressionInteractive.vue';
+import KNNInteractive from './interactive/KNNInteractive.vue';
+import DecisionTreeInteractive from './interactive/DecisionTreeInteractive.vue';
+import RandomForestsInteractive from './interactive/RandomForestsInteractive.vue';
+import GradientBoostingInteractive from './interactive/GradientBoostingInteractive.vue';
+import SVMInteractive from './interactive/SVMInteractive.vue';
+import KMeansInteractive from './interactive/KMeansInteractive.vue';
+import PCAInteractive from './interactive/PCAInteractive.vue';
+import NeuralNetworkInteractive from './interactive/NeuralNetworkInteractive.vue';
+import RLInteractive from './interactive/RLInteractive.vue';
 
 const props = defineProps<{ visualization?: Visualization }>();
 
@@ -172,6 +183,17 @@ const interactiveComponent = computed(() => {
     case 'StrategyInteractive': return StrategyInteractive;
     case 'TemplateMethodInteractive': return TemplateMethodInteractive;
     case 'VisitorInteractive': return VisitorInteractive;
+    case 'LinearRegressionInteractive': return LinearRegressionInteractive;
+    case 'LogisticRegressionInteractive': return LogisticRegressionInteractive;
+    case 'KNNInteractive': return KNNInteractive;
+    case 'DecisionTreeInteractive': return DecisionTreeInteractive;
+    case 'RandomForestsInteractive': return RandomForestsInteractive;
+    case 'GradientBoostingInteractive': return GradientBoostingInteractive;
+    case 'SVMInteractive': return SVMInteractive;
+    case 'KMeansInteractive': return KMeansInteractive;
+    case 'PCAInteractive': return PCAInteractive;
+    case 'NeuralNetworkInteractive': return NeuralNetworkInteractive;
+    case 'RLInteractive': return RLInteractive;
     default: return null;
   }
 });

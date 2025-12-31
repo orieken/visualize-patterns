@@ -22,6 +22,17 @@ export default defineConfig(({ mode }) => {
             { find: /.*\/ts\.worker\?worker/, replacement: fileURLToPath(new URL('./src/mocks/workerMock.ts', import.meta.url)) },
         ] : undefined
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'monaco-editor': ['monaco-editor'],
+            'vue-vendor': ['vue', 'vue-router'],
+            'typescript': ['typescript']
+          }
+        }
+      }
+    },
     test: {
       environment: 'jsdom',
       globals: true

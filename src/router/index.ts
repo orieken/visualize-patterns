@@ -9,10 +9,15 @@ const routes: RouteRecordRaw[] = [
     component: HomeView
   },
   {
-    path: '/visualize/:slug',
+    path: '/visualization/:slug',
     name: 'visualization',
-    component: DetailView,
+    component: () => import('../views/DetailView.vue'),
     props: true
+  },
+  {
+    path: '/playground',
+    name: 'playground',
+    component: () => import('../views/PlaygroundView.vue')
   },
   {
     path: '/:pathMatch(.*)*',

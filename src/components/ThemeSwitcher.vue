@@ -25,21 +25,23 @@ onMounted(() => {
 
 <style scoped>
 .theme-toggle {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    padding: 0.75rem 1.25rem;
-    background: var(--card-bg);
-    border: 2px solid var(--primary);
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--primary);
     color: var(--primary);
     border-radius: var(--radius-btn);
     cursor: pointer;
-    font-weight: bold;
-    box-shadow: var(--shadow-card);
-    z-index: 1000;
-    transition: transform 0.2s;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
 }
+
 .theme-toggle:hover {
-    transform: translateY(-2px);
+    background: var(--primary);
+    color: white;
 }
 </style>

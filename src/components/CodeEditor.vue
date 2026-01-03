@@ -24,7 +24,7 @@ const props = defineProps<{
     theme?: string;
 }>();
 
-const emit = defineEmits(['update:modelValue', 'run']);
+const emit = defineEmits(['update:modelValue', 'run', 'selection-change']);
 
 const container = ref<HTMLElement | null>(null);
 let editor: monaco.editor.IStandaloneCodeEditor | null = null;
@@ -56,6 +56,11 @@ onMounted(() => {
 
         editor.onDidChangeModelContent(() => {
             emit('update:modelValue', editor?.getValue());
+        });
+
+        editor.onDidChangeCursorSelection((e) => {
+            const selection = editor?.getModel()?.getValueInRange(e.selection);
+            emit('selection-change', selection || '');
         });
     }
 });

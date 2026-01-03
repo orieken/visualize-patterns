@@ -118,6 +118,18 @@ import KMeansInteractive from './interactive/KMeansInteractive.vue';
 import PCAInteractive from './interactive/PCAInteractive.vue';
 import NeuralNetworkInteractive from './interactive/NeuralNetworkInteractive.vue';
 import RLInteractive from './interactive/RLInteractive.vue';
+import BigOInteractive from './interactive/BigOInteractive.vue';
+import MatrixInteractive from './interactive/MatrixInteractive.vue';
+import GradientDescentInteractive from './interactive/GradientDescentInteractive.vue';
+import TruthTableInteractive from './interactive/TruthTableInteractive.vue';
+import SyntaxTreeInteractive from './interactive/SyntaxTreeInteractive.vue';
+import TruthTreeInteractive from './interactive/TruthTreeInteractive.vue';
+import CircuitInteractive from './interactive/CircuitInteractive.vue';
+import QuantifierInteractive from './interactive/QuantifierInteractive.vue';
+import VennInteractive from './interactive/VennInteractive.vue';
+import MappingInteractive from './interactive/MappingInteractive.vue';
+import RecurrencePlotter from './interactive/RecurrencePlotter.vue';
+import GraphMatrixInteractive from './interactive/GraphMatrixInteractive.vue';
 
 const props = defineProps<{ visualization?: Visualization }>();
 
@@ -194,6 +206,18 @@ const interactiveComponent = computed(() => {
     case 'PCAInteractive': return PCAInteractive;
     case 'NeuralNetworkInteractive': return NeuralNetworkInteractive;
     case 'RLInteractive': return RLInteractive;
+    case 'BigOInteractive': return BigOInteractive;
+    case 'MatrixInteractive': return MatrixInteractive;
+    case 'GradientDescentInteractive': return GradientDescentInteractive;
+    case 'TruthTableInteractive': return TruthTableInteractive;
+    case 'SyntaxTreeInteractive': return SyntaxTreeInteractive;
+    case 'TruthTreeInteractive': return TruthTreeInteractive;
+    case 'CircuitInteractive': return CircuitInteractive;
+    case 'QuantifierInteractive': return QuantifierInteractive;
+    case 'VennInteractive': return VennInteractive;
+    case 'MappingInteractive': return MappingInteractive;
+    case 'RecurrencePlotter': return RecurrencePlotter;
+    case 'GraphMatrixInteractive': return GraphMatrixInteractive;
     default: return null;
   }
 });

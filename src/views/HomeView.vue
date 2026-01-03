@@ -35,6 +35,29 @@
                     <span class="stat-label">ML & AI</span>
                     <ProgressBar :total="mlStats.total" :completed="mlStats.completed" color="#ec4899" />
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">Math & Sci</span>
+                    <ProgressBar :total="mathStats.total" :completed="mathStats.completed" color="#10b981" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Widget -->
+        <div class="sidebar-card">
+            <h3>Achievements</h3>
+            <div v-if="unlockedAchievements.length > 0" class="achievements-grid">
+                <div 
+                    v-for="ach in unlockedAchievements" 
+                    :key="ach.id" 
+                    class="achievement-badge"
+                    :title="ach.description"
+                >
+                    <span class="ach-icon">{{ ach.icon }}</span>
+                    <span class="ach-title">{{ ach.title }}</span>
+                </div>
+            </div>
+            <div v-else class="empty-state">
+                <p>No badges yet. Start mastering items!</p>
             </div>
         </div>
 
@@ -67,6 +90,13 @@
             description="Anchor ML study sessions with concise mental models for common learners."
             :items="mlAlgorithms"
         />
+
+        <SectionGrid
+            title="Math & Foundations"
+            subtitle="The language of the universe"
+            description="Proofs, Linear Algebra, and Calculus concepts essential for deep learning."
+            :items="mathItems"
+        />
     </div>
   </div>
 </template>
@@ -76,10 +106,10 @@ import { computed } from 'vue';
 import SectionGrid from '../components/SectionGrid.vue';
 import VisualizationChecklist from '../components/VisualizationChecklist.vue';
 import ProgressBar from '../components/ProgressBar.vue';
-import { allItems, dsaAlgorithms, designPatterns, mlAlgorithms } from '../assets/data/catalog';
+import { allItems, dsaAlgorithms, designPatterns, mlAlgorithms, mathItems } from '../assets/data/catalog';
 import { useProgress } from '../composables/useProgress';
 
-const { totalMastered, level, getCategoryProgress } = useProgress();
+const { totalMastered, level, getCategoryProgress, unlockedAchievements } = useProgress();
 
 const totalItems = computed(() => allItems.length);
 const completedItems = totalMastered;
@@ -87,6 +117,7 @@ const completedItems = totalMastered;
 const dsaStats = computed(() => getCategoryProgress(dsaAlgorithms));
 const patternStats = computed(() => getCategoryProgress(designPatterns));
 const mlStats = computed(() => getCategoryProgress(mlAlgorithms));
+const mathStats = computed(() => getCategoryProgress(mathItems));
 </script>
 
 <style scoped>
@@ -226,5 +257,49 @@ h3 {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
+}
+</style>
+
+<style scoped>
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+}
+
+.achievement-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s;
+    cursor: default;
+}
+
+.achievement-badge:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ach-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.ach-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-main);
+}
+
+.empty-state {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
 }
 </style>

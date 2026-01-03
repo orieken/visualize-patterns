@@ -7,8 +7,13 @@ export class QLearningChallenge {
   }
 
   learn(state: number, action: number, reward: number, nextState: number) {
-    // TODO: Implement Q-Learning update rule
-    // Q(s,a) += alpha * (reward + gamma * maxQ(s') - Q(s,a))
+    const alpha = 0.1;
+    const gamma = 0.9;
+    
+    const currentQ = this.qTable[state][action];
+    const maxNextQ = Math.max(...this.qTable[nextState]);
+    
+    this.qTable[state][action] = currentQ + alpha * (reward + gamma * maxNextQ - currentQ);
   }
 
   getQ(state: number, action: number): number {

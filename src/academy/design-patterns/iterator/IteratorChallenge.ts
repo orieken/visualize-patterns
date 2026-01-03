@@ -24,7 +24,7 @@ export class LinkedList<T> {
  * CHALLENGE: Implement ListIterator.
  */
 export class ListIterator<T> {
-  // TODO: Constructor
+  constructor(private list: LinkedList<T>) {}
   
   hasNext(): boolean {
     return false; // <-- FIX THIS

@@ -6,19 +6,27 @@
  * 2. Implement 'union' with Rank or Size optimization.
  */
 export class UnionFindChallenge {
-  // TODO: Add state (parent array, rank, etc)
+  private parent: number[];
 
   constructor(size: number) {
-    // TODO: Init arrays
+    this.parent = Array.from({ length: size }, (_, i) => i);
   }
 
   find(i: number): number {
-    // TODO: Implement find with path compression
-    return i; 
+    if (this.parent[i] === i) {
+        return i;
+    }
+    // Path compression
+    this.parent[i] = this.find(this.parent[i]);
+    return this.parent[i];
   }
 
   union(i: number, j: number): void {
-    // TODO: Implement union
+    const rootI = this.find(i);
+    const rootJ = this.find(j);
+    if (rootI !== rootJ) {
+        this.parent[rootI] = rootJ;
+    }
   }
 
   connected(i: number, j: number): boolean {

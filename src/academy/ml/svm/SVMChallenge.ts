@@ -11,8 +11,10 @@ export class SVMChallenge {
   }
 
   predict(x: number[]): number {
-    // TODO: Calculate dot product w*x + b
-    // TODO: Return sign (1 or -1)
-    return 0; // <-- FIX THIS
+    let score = this.b;
+    for (let i = 0; i < this.w.length; i++) {
+        score += this.w[i] * x[i];
+    }
+    return score >= 0 ? 1 : -1;
   }
 }

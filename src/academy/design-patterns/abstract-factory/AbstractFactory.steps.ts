@@ -37,7 +37,7 @@ Then('the sofa should be "Victorian"', function () {
 // We can use "any" to bypass TS checks for the scaffolding, or comment it out until they implement it.
 // For now, we'll try to instantiate dynamically or fail if not found.
 
-let app: Application;
+let app: Application | undefined;
 let paintResult: string;
 
 Given('I configure the app with {string}', function (factoryName) {

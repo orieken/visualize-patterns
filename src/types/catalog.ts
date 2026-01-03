@@ -1,4 +1,4 @@
-export type Domain = 'DS&A' | 'Gang of Four' | 'ML & AI';
+export type Domain = 'DS&A' | 'Gang of Four' | 'ML & AI' | 'Math';
 
 export type VisualizationType = 'graph' | 'bars' | 'timeline' | 'scatter' | 'flow';
 
@@ -82,4 +82,10 @@ export interface CatalogItem {
   intent?: string;
   explanation?: string;
   visualization?: Visualization;
+  starterCode?: string;
+  testCases?: Array<{
+    input: any[];
+    expected: any;
+  }>;
+  hints?: string[];
 }

@@ -52,14 +52,66 @@
       <div v-show="activeTab === 'code'" class="tab-content code-pane">
         <div class="editor-toolbar">
             <span>TypeScript Sandbox</span>
-            <button class="run-btn" @click="handleRun" :disabled="isRunning">
-                {{ isRunning ? 'Running...' : '▶ Run Code' }}
-            </button>
+            <div class="toolbar-actions">
+                <button 
+                    v-if="item?.hints && item.hints.length > 0" 
+                    class="hint-btn" 
+                    @click="showNextHint"
+                    :disabled="visibleHints >= item.hints.length"
+                >
+                    💡 {{ visibleHints < item.hints.length ? 'Need a Hint?' : 'All Hints Shown' }} 
+                    ({{ visibleHints }}/{{ item.hints.length }})
+                </button>
+                <button 
+                    class="hint-btn" 
+                    @click="explainCode"
+                    :disabled="!selectedCode || isExplaining"
+                    title="Select code to explain"
+                >
+                    {{ isExplaining ? '⏳ Thinking...' : '🤖 Explain' }}
+                </button>
+                <button 
+                    class="hint-btn" 
+                    @click="checkCode" 
+                    :disabled="isChecking"
+                    title="AI Code Review"
+                >
+                    {{ isChecking ? '⏳ Checking...' : '🔍 Coach' }}
+                </button>
+                <button class="run-btn" @click="handleRun" :disabled="isRunning">
+                    {{ isRunning ? 'Running...' : '▶ Run Code' }}
+                </button>
+            </div>
+        </div>
+        
+        <!-- Hints Panel -->
+        <div v-if="visibleHints > 0 && item?.hints" class="hints-panel">
+            <div v-for="(hint, i) in item.hints.slice(0, visibleHints)" :key="i" class="hint-item">
+                <span class="hint-idx">Hint {{ i + 1 }}:</span> {{ hint }}
+            </div>
         </div>
         <div class="split-view">
-             <CodeEditor v-model="userCode" language="typescript" theme="vs-dark" />
+             <CodeEditor 
+                v-model="userCode" 
+                language="typescript" 
+                theme="vs-dark" 
+                @selection-change="(val) => selectedCode = val"
+             />
              <div class="console-output">
-                <div class="console-header">Output</div>
+                <div class="console-header">
+                    <span>Output</span>
+                    <span v-if="testResults" :class="['test-badge', testResults.passed ? 'pass' : 'fail']">
+                        {{ testResults.passed ? '✅ Passed' : '❌ Failed' }}
+                    </span>
+                </div>
+                
+                <!-- Coach/Validation Area -->
+                <div v-if="validationSuggestions.length > 0" class="suggestions-box">
+                    <div v-for="(msg, i) in validationSuggestions" :key="i" class="suggestion-item">
+                        {{ msg }}
+                    </div>
+                </div>
+
                 <div v-if="output.length === 0" class="placeholder">Run to see output...</div>
                 <div v-for="(line, i) in output" :key="i" class="log-line">{{ line }}</div>
              </div>
@@ -83,14 +135,27 @@ import { useCodeRunner } from '../composables/useCodeRunner';
 import { useProgress } from '../composables/useProgress';
 import type { CatalogItem } from '../types/catalog';
 import { allItems } from '../assets/data/catalog';
+import { getCodeSuggestions } from '../utils/validation';
+import { askAI } from '../services/ai';
 
 const route = useRoute();
 const activeTab = ref<'viz' | 'code'>('viz');
 const { isMastered, toggleMastery } = useProgress();
 
-// Reset tab when navigating to a new item
+// Hint State
+const visibleHints = ref(0);
+const showNextHint = () => {
+    if (item.value?.hints && visibleHints.value < item.value.hints.length) {
+        visibleHints.value++;
+    }
+}
+
+// Reset tab and hints when navigating to a new item
 watch(() => route.params.slug, () => {
   activeTab.value = 'viz';
+  visibleHints.value = 0;
+  explanation.value = '';
+  aiAnalysis.value = null;
 });
 
 const slugParam = computed(() => {
@@ -105,6 +170,10 @@ const item = computed<CatalogItem | undefined>(() =>
 // Starter code generator
 const starterCode = computed(() => {
   if (!item.value) return '';
+  
+  // Prefer specific starter code
+  if (item.value.starterCode) return item.value.starterCode;
+
   const name = item.value.name.replace(/\s+/g, '');
   return `/**
  * ${item.value.name} Playground
@@ -130,10 +199,85 @@ watch(starterCode, (newCode) => {
   userCode.value = newCode;
 }, { immediate: true });
 
-const { runCode, output, isRunning } = useCodeRunner();
+// Selection & Explanation
+const selectedCode = ref('');
+const explanation = ref('');
+const isExplaining = ref(false);
+
+const explainCode = async () => {
+    if (!selectedCode.value || !item.value) return;
+    
+    isExplaining.value = true;
+    explanation.value = 'Thinking...';
+    
+    try {
+        const res = await askAI({
+            intent: 'explain',
+            code: selectedCode.value,
+            context: { slug: item.value.slug!, topic: item.value.name }
+        });
+        explanation.value = res.content;
+    } finally {
+        isExplaining.value = false;
+    }
+    
+    // Auto-clear after 20s if it's the mock response, checking content length is a heuristic
+    if (explanation.value.includes('AI Explanation')) {
+        setTimeout(() => explanation.value = '', 20000);
+    }
+};
+
+// Validation / AI Coach
+const aiAnalysis = ref<string | null>(null);
+const isChecking = ref(false);
+
+const checkCode = async () => {
+    if (!userCode.value || !item.value) return;
+    
+    isChecking.value = true;
+    aiAnalysis.value = null;
+    
+    try {
+        const res = await askAI({
+            intent: 'validate',
+            code: userCode.value,
+            context: { slug: item.value.slug!, topic: item.value.name }
+        });
+        aiAnalysis.value = res.content;
+    } finally {
+        isChecking.value = false;
+    }
+};
+
+// Merged Suggestions (Live Heuristics + AI Analysis)
+const validationSuggestions = computed(() => {
+    const msgs: string[] = [];
+    
+    // 1. AI Analysis Result
+    if (aiAnalysis.value) {
+        msgs.push(aiAnalysis.value);
+    }
+    
+    // 2. Explanation
+    if (explanation.value) {
+        msgs.push(explanation.value);
+    }
+    
+    // 3. Live Heuristics (only if no AI analysis yet, to avoid clutter?)
+    // Actually, let's always show basic heuristics as they are instant
+    if (item.value?.slug) {
+        const basics = getCodeSuggestions(item.value.slug, userCode.value);
+        msgs.push(...basics);
+    }
+    
+    return msgs;
+});
+
+const { runCode, output, isRunning, testResults } = useCodeRunner();
 
 const handleRun = () => {
-  runCode(userCode.value);
+    const tests = item.value?.testCases;
+    runCode(userCode.value, tests);
 };
 </script>
 
@@ -231,6 +375,67 @@ const handleRun = () => {
     border-radius: 8px 8px 0 0;
 }
 
+.toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.hint-btn {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.hint-btn:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.hint-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+}
+
+.hints-panel {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    padding: 0.75rem;
+    color: #92400e;
+    font-size: 0.9rem;
+    border-left: 1px solid var(--card-border);
+    border-right: 1px solid var(--card-border);
+}
+
+/* Dark mode adjustment for hints panel if needed, but let's stick to yellow for 'hint' feel */
+@media (prefers-color-scheme: dark) {
+    .hints-panel {
+        background: #422006;
+        border-color: #f59e0b;
+        color: #fcd34d;
+    }
+}
+
+.hint-item {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.hint-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+.hint-idx {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
 .split-view {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
@@ -256,6 +461,41 @@ const handleRun = () => {
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.test-badge {
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.test-badge.pass {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid #22c55e;
+}
+
+.test-badge.fail {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
+}
+
+.suggestions-box {
+    background: rgba(37, 99, 235, 0.1);
+    border-left: 2px solid var(--primary);
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #93c5fd;
+}
+
+.suggestion-item {
+    margin-bottom: 0.25rem;
 }
 
 .run-btn {

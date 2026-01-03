@@ -23,7 +23,7 @@ export class AddExpression implements MathExpression {
 }
 
 export class MinusExpression implements MathExpression {
-  // TODO: Constructor
+  constructor(private left: MathExpression, private right: MathExpression) {}
   
   interpret(): number {
     return 0; // <-- FIX THIS

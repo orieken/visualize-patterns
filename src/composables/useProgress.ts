@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue';
+import { achievements } from '../assets/data/achievements';
 
 const STORAGE_KEY = 'pattern-mastery-v1';
 
@@ -58,12 +59,17 @@ export function useProgress() {
         };
     };
 
+    const unlockedAchievements = computed(() => {
+        return achievements.filter(a => a.condition(masteredItems.value));
+    });
+
     return {
         masteredItems,
         toggleMastery,
         isMastered,
         totalMastered,
         level,
-        getCategoryProgress
+        getCategoryProgress,
+        unlockedAchievements
     };
 }
